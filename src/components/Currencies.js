@@ -8,12 +8,21 @@ function Currencies() {
     const [currencies, setCurrencies] = useState([]);
     const [filteredCurrencies, setfilteredCurrencies] = useState([]);
     const [search, setSearch] = useState('');
+
+    const currentDate = new Date().toJSON().split('T')[0];
+    console.log(currentDate)
+    const [date, setDate] = useState(currentDate);
+
     useEffect(() => {
-        fetch('https://bank.gov.ua/NBUStatService/v1/statdirectory/exchange?date=20221208&json').then(res => res.json()).then(data => {
+        fetch(`https://bank.gov.ua/NBUStatService/v1/statdirectory/exchange?date=${date.replaceAll('-','')}&json`).then(res => res.json()).then(data => {
             console.log(data)
             setCurrencies(data)
         })
-    }, [])
+    }, [date])
+    
+
+    
+    
 
 
     function searchByCurrencyName(value) {
@@ -25,6 +34,7 @@ function Currencies() {
 
 
     return <div>
+        <input defaultValue={date} className={'form-control mb-4 border-dark'} type={'date'} onChange={e => setDate(e.currentTarget.value) }/>
         <Search
             searchByCurrencyName={searchByCurrencyName}
         />
